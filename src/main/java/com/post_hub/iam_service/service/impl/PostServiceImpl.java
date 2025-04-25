@@ -1,0 +1,40 @@
+package com.post_hub.iam_service.service.impl;
+
+import com.post_hub.iam_service.model.constants.ApiErrorMessage;
+import com.post_hub.iam_service.model.dto.Post.PostDTO;
+import com.post_hub.iam_service.model.enteties.Post;
+import com.post_hub.iam_service.model.exception.NotFoundExceptinon;
+import com.post_hub.iam_service.model.response.IamResponse;
+import com.post_hub.iam_service.repositories.PostRepository;
+import com.post_hub.iam_service.service.PostService;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class PostServiceImpl implements PostService {
+    public final PostRepository postRepository;
+    private final List<String> posts = new ArrayList<>();
+
+    @Override
+    public IamResponse<PostDTO> getById(@NotNull Integer id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundExceptinon(ApiErrorMessage.POST_NOT_FOUND_BY_ID.getMessage(id)));
+        PostDTO postDTO = PostDTO  .builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .likes(post.getLikes())
+                .createdAt(post.getCreated())
+                .build();
+        return IamResponse.createSuccessful(postDTO);
+    }
+    @Override
+    public void createPost(String postContent) {
+        posts.add(postContent);
+    }
+}

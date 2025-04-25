@@ -1,12 +1,12 @@
 package com.post_hub.iam_service.controller;
 
-import com.post_hub.iam_service.model.constants.ApiErrorMessage;
 import com.post_hub.iam_service.model.constants.ApiLogMessage;
-import com.post_hub.iam_service.model.enteties.Post;
+import com.post_hub.iam_service.model.dto.Post.PostDTO;
+import com.post_hub.iam_service.model.response.IamResponse;
 import com.post_hub.iam_service.repositories.PostRepository;
-import com.post_hub.iam_service.service.PostServiceImpl;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import com.post_hub.iam_service.service.PostService;
+import com.post_hub.iam_service.service.impl.PostServiceImpl;
+import com.post_hub.iam_service.utils.ApiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,15 @@ public class PostController {
     private final PostRepository postRepository;
     private static final Logger log = LoggerFactory.getLogger(PostController.class);
 
+    private final PostService postService;
+
+
+
     @Autowired
-    public PostController(PostServiceImpl postServiceImpl, PostRepository postRepository) {
+    public PostController(PostServiceImpl postServiceImpl, PostRepository postRepository, PostService postService) {
         this.postServiceImpl = postServiceImpl;
         this.postRepository = postRepository;
+        this.postService = postService;
     }
 
     @PostMapping("/create")
@@ -44,14 +49,10 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable(name = "id") Integer postId){
-        log.info(ApiLogMessage.POST_INFO_BY_ID.getMessage(postId));
-        return postRepository.findById(postId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> {
-                    log.info(ApiErrorMessage.POST_NOT_FOUND_BY_ID.getMessage(postId));
-                    return ResponseEntity.notFound().build();
-                });
+    public ResponseEntity<IamResponse<PostDTO>> getPostById(@PathVariable(name = "id") Integer postId){
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
+        IamResponse<PostDTO> response = postService.getById(postId);
+        return ResponseEntity.ok(response);
     }
 
 }

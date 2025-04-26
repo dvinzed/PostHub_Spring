@@ -1,5 +1,6 @@
 package com.post_hub.iam_service.service.impl;
 
+import com.post_hub.iam_service.mapper.PostMapper;
 import com.post_hub.iam_service.model.constants.ApiErrorMessage;
 import com.post_hub.iam_service.model.dto.Post.PostDTO;
 import com.post_hub.iam_service.model.enteties.Post;
@@ -19,18 +20,13 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     public final PostRepository postRepository;
     private final List<String> posts = new ArrayList<>();
+    private final PostMapper postMapper;
 
     @Override
     public IamResponse<PostDTO> getById(@NotNull Integer id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundExceptinon(ApiErrorMessage.POST_NOT_FOUND_BY_ID.getMessage(id)));
-        PostDTO postDTO = PostDTO  .builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .likes(post.getLikes())
-                .createdAt(post.getCreated())
-                .build();
+        PostDTO postDTO = postMapper.toPostDto(post);
         return IamResponse.createSuccessful(postDTO);
     }
     @Override

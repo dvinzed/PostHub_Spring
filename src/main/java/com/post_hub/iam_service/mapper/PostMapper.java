@@ -21,6 +21,6 @@ public interface PostMapper {
      @Mapping(source = "content", target="content")
      @Mapping(source = "likes", target="likes")
      @Mapping(source = "created", target="created", dateFormat = "yyyy-MM-dd'T'HH:mm:ss")
-    PostDTO toPostDto(Post post)
+    PostDTO toPostDto(Post post);
 
 }

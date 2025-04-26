@@ -12,7 +12,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class IamResponse<P extends Serializable> implements Serializable {
 
     private String message;

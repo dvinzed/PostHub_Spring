@@ -3,11 +3,14 @@ package com.post_hub.iam_service.model.enteties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name="posts")
+@Getter
+@Setter
 public class Post {
 
     @Id
@@ -21,6 +24,7 @@ public class Post {
     private String content;
 
     @Column(nullable=false, updatable=false)
+    @CreationTimestamp
     private LocalDateTime created;
 
     @Column(nullable=false,columnDefinition = "integer default 0")

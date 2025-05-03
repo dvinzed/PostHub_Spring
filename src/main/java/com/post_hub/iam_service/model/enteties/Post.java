@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Post {
+
+    public static final String ID_FIELD = "id";
+    public static final String TITLE_NAME_FIELD = "title";
+    public static final String CONTENT_NAME_FIELD = "content";
+    public static final String LIKES_NAME_FIELD = "likes";
+    public static final String DELETED_FIELD = "deleted";
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -27,46 +34,27 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime created;
 
+
     @Column(nullable=false,columnDefinition = "integer default 0")
     private Integer likes = 0;
 
-    public Integer getId() {
-        return id;
-    }
+    @UpdateTimestamp
+    @Column(nullable=false)
+    private LocalDateTime updated;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean deleted = false;
 
-    public String getTitle() {
-        return title;
-    }
+    @ManyToOne()
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    @Column(name = "created_by")
+    private String createdBy;
 
-    public String getContent() {
-        return content;
-    }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
 
-    public LocalDateTime getCreated() {
-        return created;
-    }
 
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
 
-    public Integer getLikes() {
-        return likes;
-    }
 
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
 }

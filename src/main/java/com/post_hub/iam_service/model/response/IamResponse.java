@@ -1,6 +1,7 @@
 package com.post_hub.iam_service.model.response;
 
 import ch.qos.logback.core.util.StringUtil;
+import com.post_hub.iam_service.model.constants.ApiMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,10 @@ public class IamResponse<P extends Serializable> implements Serializable {
         this.message = message;
         this.payload = payload;
         this.success = success;
+    }
+
+    public static <P extends Serializable> IamResponse<P> createSuccessfulWithNewToken(P payload) {
+        return new IamResponse<>(ApiMessage.TOKEN_CREATED_OR_UPDATED.getMessage(), payload, true);
     }
 
 }

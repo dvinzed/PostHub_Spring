@@ -49,9 +49,9 @@ CREATE TABLE users_roles(
 
 
 INSERT INTO users (username, password, email, created, updated, registration_status, last_login, deleted) VALUES
-                  ('super_admin','password1','super_admin@gmail.com',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'ACTIVE',CURRENT_TIMESTAMP,false),
-                  ('admin','password1','admin@gmail.com',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'ACTIVE',CURRENT_TIMESTAMP,false),
-                  ('user','password1','user@gmail.com',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'ACTIVE',CURRENT_TIMESTAMP,false);
+                  ('super_admin','$2a$10$HonliEeFQxuhfX1p/vDfyOz8R9fp8cdc/SutSILypfAgEbrJxFTay','super_admin@gmail.com',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'ACTIVE',CURRENT_TIMESTAMP,false),
+                  ('admin','$2a$10$HonliEeFQxuhfX1p/vDfyOz8R9fp8cdc/SutSILypfAgEbrJxFTay','admin@gmail.com',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'ACTIVE',CURRENT_TIMESTAMP,false),
+                  ('user','$2a$10$HonliEeFQxuhfX1p/vDfyOz8R9fp8cdc/SutSILypfAgEbrJxFTay','user@gmail.com',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'ACTIVE',CURRENT_TIMESTAMP,false);
 
 
 

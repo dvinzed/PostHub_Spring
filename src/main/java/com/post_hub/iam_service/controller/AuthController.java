@@ -11,11 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -30,6 +28,19 @@ public class AuthController {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
         IamResponse<UserProfileDTO> result = authService.login(request);
+        Cookie authorizaitonCookie = ApiUtils.createAuthCookie(result.getPayload().getToken());
+        response.addCookie(authorizaitonCookie);
+
+        log.info("Login response: {}", result);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("${end.point.refresh.token}")
+    public ResponseEntity<IamResponse<UserProfileDTO>> refreshToken(
+            @RequestParam(name = "token") String refreshToken,
+            HttpServletResponse response){
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
+        IamResponse<UserProfileDTO> result = authService.refreshAccessToken(refreshToken);
         Cookie authorizaitonCookie = ApiUtils.createAuthCookie(result.getPayload().getToken());
         response.addCookie(authorizaitonCookie);
         return ResponseEntity.ok(result);

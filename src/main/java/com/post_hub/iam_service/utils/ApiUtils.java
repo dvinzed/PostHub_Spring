@@ -3,7 +3,10 @@ package com.post_hub.iam_service.utils;
 import com.post_hub.iam_service.model.constants.ApiConstants;
 import jakarta.servlet.http.Cookie;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
+
+import java.util.UUID;
 
 public class ApiUtils {
 
@@ -26,4 +29,7 @@ public class ApiUtils {
 
     }
 
-}
+        public static String generateUuiWithoudDash(){
+            return UUID.randomUUID().toString().replace(ApiConstants.DASH, StringUtils.EMPTY);
+        }
+    }

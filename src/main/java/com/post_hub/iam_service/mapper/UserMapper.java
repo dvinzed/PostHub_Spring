@@ -8,6 +8,7 @@ import com.post_hub.iam_service.model.enteties.Role;
 import com.post_hub.iam_service.model.enteties.User;
 import com.post_hub.iam_service.model.enums.RegistrationStatus;
 import com.post_hub.iam_service.model.request.User.NewUserRequest;
+import com.post_hub.iam_service.model.request.User.RegistrationUserRequest;
 import com.post_hub.iam_service.model.request.User.UpdateUserRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -41,12 +42,19 @@ public interface UserMapper {
 
     UserSearchDTO toUserSearchDto(User user);
 
-
+    @Mapping(target = "id", source = "user.id")
     @Mapping(target = "roles", expression = "java(mapRoles(user.getRoles()))")
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "email", source = "user.email")
     @Mapping(target = "token", source = "token")
-    UserProfileDTO toUserProfileDto(User user, String token);
+    @Mapping(target = "refreshToken", source = "refreshToken")
+    UserProfileDTO toUserProfileDto(User user, String token, String refreshToken);
+
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "registrationStatus", expression = "java(RegistrationStatus.ACTIVE)")
+    User fromDTO(RegistrationUserRequest request);
+
 
     default List<RoleDTO> mapRoles(Collection<Role> roles){
         return roles.stream()

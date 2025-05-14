@@ -53,6 +53,7 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "registrationStatus", expression = "java(RegistrationStatus.ACTIVE)")
+    @Mapping(source = "username", target = "username")
     User fromDTO(RegistrationUserRequest request);
 
 

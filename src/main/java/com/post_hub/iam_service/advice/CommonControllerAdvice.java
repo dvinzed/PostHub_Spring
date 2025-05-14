@@ -2,6 +2,7 @@ package com.post_hub.iam_service.advice;
 
 import com.post_hub.iam_service.model.constants.ApiConstants;
 import com.post_hub.iam_service.model.exception.DataExistException;
+import com.post_hub.iam_service.model.exception.InvalidDataException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,6 +55,13 @@ public class CommonControllerAdvice {
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 
+    }
+
+    @ExceptionHandler(InvalidDataException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public String handleInvalidDataException(InvalidDataException ex) {
+        return ex.getMessage();
     }
 
 

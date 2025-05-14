@@ -14,9 +14,11 @@ import com.post_hub.iam_service.model.response.IamResponse;
 import com.post_hub.iam_service.repositories.RoleRepository;
 import com.post_hub.iam_service.repositories.UserRepository;
 import com.post_hub.iam_service.security.JwtTokenProvider;
+import com.post_hub.iam_service.security.validation.AccessValidator;
 import com.post_hub.iam_service.service.AuthService;
 import com.post_hub.iam_service.service.RefreshTokenService;
 import com.post_hub.iam_service.service.model.UserRole;
+import com.post_hub.iam_service.utils.PasswordUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenService refreshTokenService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final AccessValidator accessValidator;
     @Override
     public IamResponse<UserProfileDTO> login(@NotNull LoginRequest request) {
         try{
@@ -76,17 +78,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public IamResponse<UserProfileDTO> registerUser(@NotNull RegistrationUserRequest request) {
-        userRepository.findByUsername(request.getUsername()).ifPresent(user -> {
-            throw new InvalidDataException(ApiErrorMessage.USERNAME_ALREADY_EXISTS.getMessage(request.getUsername()));
-        });
+        accessValidator.valideNewUser(request.getUsername(),request.getEmail(),request.getPassword(),request.getConfirmPassword());
 
-
-        userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
-            throw new InvalidDataException(ApiErrorMessage.EMAIL_ALREADY_EXISTS.getMessage(request.getEmail()));
-        });
 
         Role userRole = roleRepository.findByName(UserRole.USER.getRole())
                 .orElseThrow(() -> new NotFoundExceptinon(ApiErrorMessage.USER_ROLE_NOT_FOUND.getMessage()));
+
 
         User newUser = userMapper.fromDTO(request);
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
